@@ -47,9 +47,17 @@
           this._play()
         }
       }, 20)
+      window.addEventListener('resize',()=>{
+          if(!this.slider){
+              return
+          }
+          this._setSliderWidth(true)
+          //refresh BScorll提供的方法
+          this.slider.refresh()
+      })
     },
     methods: {
-      _setSliderWidth(){
+      _setSliderWidth(isResize){
         this.children = this.$refs.sliderGroup.children
 
         let width = 0
@@ -62,7 +70,7 @@
           child.style.width = sliderWidth + 'px'
           width += sliderWidth
         }
-        if (this.loop) {
+        if (this.loop && !isResize) {
           width += 2 * sliderWidth
         }
         this.$refs.sliderGroup.style.width = width + 'px'
@@ -78,16 +86,21 @@
           snap: true,
           snapLoop: this.loop,
           snapThreshold: 0.3,
-          snapSpeed: 400,
-          click: true
+          snapSpeed: 400
         })
         this.slider.on('scrollEnd', () => {
           //getCurrentPage BScroll中的方法
+          //返回值：{Object} { x: posX, y: posY,pageX: x, pageY: y} 其中，x 和 y 表示偏移的坐标值，pageX 和 pageY 表示横轴方向和纵轴方向的页面数。
+          //作用：获取当前页面的信息。
           let pageIndex = this.slider.getCurrentPage().pageX
           if (this.loop) {
             pageIndex -= 1
           }
           this.currentPageIndex = pageIndex
+          if (this.autoPlay) {
+            clearTimeout(this.timer)
+            this._play()
+          }
         })
       },
       _play(){
