@@ -113,6 +113,10 @@
           this.slider.goToPage(pageIndex, 0, 400)
         }, this.interval)
       }
+    },
+    destroyed(){
+        // 养成好习惯，有定时器在结束时记得清除
+        clearTimeout(this.timer)
     }
   }
 </script>
