@@ -7,8 +7,17 @@
 </template>
 
 <script type="text/ecmascript-6">
-
-  export default{}
+  import {mapGetters} from 'vuex'
+  export default{
+    computed: {
+      ...mapGetters([
+        'singer'
+      ])
+    },
+    created(){
+      console.log(this.singer);
+    }
+  }
 
 </script>
 
@@ -24,8 +33,9 @@
     bottom: 0
     background: $color-background
 
-  .slide-enter-active,.slide-leave-active
+  .slide-enter-active, .slide-leave-active
     transition: all 0.3s
-  .slide-enter,.slide-leave-to
-    transform: translate3d(100%,0,0)
+
+  .slide-enter, .slide-leave-to
+    transform: translate3d(100%, 0, 0)
 </style>
