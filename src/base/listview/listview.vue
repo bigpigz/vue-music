@@ -1,7 +1,7 @@
 <template>
-  <scroll class="listview" :data="data">
+  <scroll class="listview" :data="data" ref="listview">
     <ul>
-      <li v-for="group in data" class="list-group">
+      <li v-for="group in data" class="list-group" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
           <li v-for="item in group.items" class="list-group-item">
@@ -11,17 +11,61 @@
         </ul>
       </li>
     </ul>
+    <div class="list-shortcut"
+         @touchstart="onShortcutTouchStart"
+         @touchmove.stop.prevent="onShortcutTouchMove"
+    >
+      <ul>
+        <li v-for="(item,index) in shortcutList" class="item" :data-index="index">
+          {{item}}
+        </li>
+      </ul>
+    </div>
   </scroll>
 </template>
 
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
-
+  import {getData} from 'common/js/dom'
+  //字体高度+padding值
+  const ANCHOR_HEIGHT = 18
   export default{
+    created(){
+      this.touch = {}
+    },
     props: {
       data: {
         type: Array,
         default: []
+      }
+    },
+    //使用computed定义的属性就相当于data中定义的数据属性一样,只不过computed里面定义的属性值是通过计算得到的。
+    computed: {
+      shortcutList(){
+        return this.data.map((group) => {
+          return group.title.substr(0, 1)
+        })
+      }
+    },
+    methods: {
+      onShortcutTouchStart(e){
+        let anchorIndex = getData(e.target, 'index')
+        //touches[0]  表示第一根手指触碰的位置
+        let firstTouch = e.touches[0]
+        this.touch.y1 = firstTouch.pageY
+        this.touch.anchorIndex = anchorIndex
+        this._scrollTo(anchorIndex)
+      },
+      onShortcutTouchMove(e){
+        let firstTouch = e.touches[0]
+        this.touch.y2 = firstTouch.pageY
+        // | 0   管道符号，向下取整  等同于 Math.floor
+        let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
+        let anchorIndex = this.touch.anchorIndex + delta
+        this._scrollTo(anchorIndex)
+      },
+      _scrollTo(index){
+        this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
       }
     },
     components: {
