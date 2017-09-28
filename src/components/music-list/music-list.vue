@@ -7,37 +7,50 @@
     <div class="bg-image" :style="bgStyle" ref="bgImage">
       <div class="filter" ref="filter"></div>
     </div>
+    <scroll :data="songs" class="list" ref="list">
+      <div class="song-list-wrapper">
+        <song-list :songs="songs"></song-list>
+      </div>
+    </scroll>
   </div>
-
 </template>
 
 <script type="text/ecmascript-6">
+  import Scroll from 'base/scroll/scroll'
+  import SongList from 'base/song-list/song-list'
   export default {
-      props:{
-          bgImage:{
-              type:String,
-              default:''
-          },
-          songs:{
-            type:Array,
-            default:[]
-          },
-          title:{
-            type:String,
-            default:''
-          }
+    props: {
+      bgImage: {
+        type: String,
+        default: ''
       },
-      computed:{
-          bgStyle(){
-              return `background-image:url(${this.bgImage})`
-          }
+      songs: {
+        type: Array,
+        default: []
       },
-      methods:{
-        back(){
-            //回到上一个路由
-            this.$router.back()
-        }
+      title: {
+        type: String,
+        default: ''
       }
+    },
+    computed: {
+      bgStyle(){
+        return `background-image:url(${this.bgImage})`
+      }
+    },
+    methods: {
+      back(){
+        //回到上一个路由
+        this.$router.back()
+      }
+    },
+    mounted(){
+        this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
+    },
+    components: {
+      Scroll,
+      SongList
+    }
   }
 </script>
 
@@ -118,6 +131,7 @@
       height: 100%
       background: $color-background
     .list
+      overflow: hidden
       position: fixed
       top: 0
       bottom: 0
