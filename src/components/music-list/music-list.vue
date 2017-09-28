@@ -7,7 +7,13 @@
     <div class="bg-image" :style="bgStyle" ref="bgImage">
       <div class="filter" ref="filter"></div>
     </div>
-    <scroll :data="songs" class="list" ref="list">
+    <div class="bg-layer" ref="layer"></div>
+    <scroll :data="songs"
+            class="list" ref="list"
+            :probe-type="probeType"
+            :listen-scroll="listenScroll"
+            @scroll="scroll"
+    >
       <div class="song-list-wrapper">
         <song-list :songs="songs"></song-list>
       </div>
@@ -18,6 +24,8 @@
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import SongList from 'base/song-list/song-list'
+
+  const RESERVED_HEIGHT = 40
   export default {
     props: {
       bgImage: {
@@ -38,14 +46,35 @@
         return `background-image:url(${this.bgImage})`
       }
     },
+    data(){
+      return {
+        scrollY: 0
+      }
+    },
     methods: {
       back(){
         //回到上一个路由
         this.$router.back()
+      },
+      scroll(pos){
+        this.scrollY = pos.y
       }
     },
+    watch: {
+      scrollY(newY){
+        let translateY = Math.max(this.minTranslateY,newY)
+        this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`
+        this.$refs.layer.style['webkitTransform'] = `translate3d(0,${translateY}px,0)`
+      }
+    },
+    created(){
+      this.probeType = 3
+      this.listenScroll = true
+    },
     mounted(){
-        this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
+      this.imageHeight = this.$refs.bgImage.clientHeight
+      this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT
+      this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
     },
     components: {
       Scroll,
@@ -131,7 +160,7 @@
       height: 100%
       background: $color-background
     .list
-      overflow: hidden
+    //overflow: hidden
       position: fixed
       top: 0
       bottom: 0
