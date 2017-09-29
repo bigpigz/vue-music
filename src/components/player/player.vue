@@ -1,6 +1,11 @@
 <template>
   <div class="player" v-show="playlist.length>0">
-    <transition name="normal">
+    <transition name="normal"
+                @enter="enter"
+                @after-enter="afterEnter"
+                @leave="leave"
+                @after-leave="afterLeave"
+    >
       <div class="normal-player" v-show="fullScreen">
         <div class="background">
           <img width="100%" height="100%" :src="currentSong.image">
@@ -61,6 +66,7 @@
 
 <script type="text/ecmascript-6">
   import {mapGetters, mapMutations} from 'vuex'
+  import animations from 'create-keyframe-animation'
   export default {
     computed: {
       ...mapGetters([
@@ -75,6 +81,44 @@
       },
       open(){
         this.setFullScreen(true)
+      },
+      enter(el, done){
+        const {x,y,scale} = this._getPosAndScale
+        let animation = {
+            0: {
+              transform: `translate3d(${x}px,${y}px,0) scale(${scale})`
+            },
+          60:{
+            transform: `translate3d(0,0,0) scale(1.1)`
+          },
+          100:{
+            transform: `translate3d(0,0,0) scale(1)`
+          }
+        }
+      },
+      afterEnter(){
+
+      },
+      leave(el, done){
+
+      },
+      afterLeave(){
+
+      },
+      _getPosAndScale(){
+        const targetWidth = 40  //mini播放器左侧图标宽度
+        const paddingLeft = 40
+        const paddingBottom = 30
+        const paddingTop = 80
+        const width = window.innerWidth * 0.8
+        const scale = targetWidth / width
+        const x = -(window.innerWidth / 2 - paddingLeft)
+        const y = window.innerHeight - paddingTop - width / 2 - paddingTop
+        return {
+          x,
+          y,
+          scale
+        }
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN'
