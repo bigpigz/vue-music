@@ -63,9 +63,9 @@
           <h2 class="name" v-html="currentSong.name"></h2>
           <p class="desc" v-html="currentSong.singer"></p>
         </div>
-        <div class="control">
-          <i :class="miniIcon" @click.stop="togglePlaying"></i>
-        </div>
+        <progress-circle class="control" :radius="radius" :percent="percent">
+          <i :class="miniIcon" @click.stop="togglePlaying" class="icon-mini"></i>
+        </progress-circle>
         <div class="control">
           <i class="icon-playlist"></i>
         </div>
@@ -80,13 +80,15 @@
   import animations from 'create-keyframe-animation'
   import {prefixStyle} from 'common/js/dom'
   import ProgressBar from 'base/progress-bar/progress-bar'
+  import ProgressCircle from 'base/progress-circle/progress-circle'
 
   const transform = prefixStyle('transform')
   export default {
     data(){
       return {
         songReady: false,
-        currentTime: 0
+        currentTime: 0,
+        radius: 32
       }
     },
     computed: {
@@ -252,7 +254,8 @@
       }
     },
     components: {
-      ProgressBar
+      ProgressBar,
+      ProgressCircle
     }
   }
 </script>
@@ -488,7 +491,7 @@
         .icon-mini
           font-size: 32px
           position: absolute
-          left: 0
+          left: 10px
           top: 0
 
   @keyframes rotate
