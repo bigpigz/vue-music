@@ -28,16 +28,16 @@
         </div>
         <div class="bottom">
           <div class="operators">
-            <div class="icon i-left">
+            <div class="icon i-left" :class="disableCls">
               <i class="icon-sequence"></i>
             </div>
-            <div class="icon i-left">
+            <div class="icon i-left" :class="disableCls">
               <i class="icon-prev" @click="prev"></i>
             </div>
             <div class="icon i-center">
               <i :class="playIcon" @click="togglePlaying"></i>
             </div>
-            <div class="icon i-right">
+            <div class="icon i-right" :class="disableCls">
               <i class="icon-next" @click="next"></i>
             </div>
             <div class="icon i-right">
@@ -89,6 +89,9 @@
       },
       cdCls(){
         return this.playing ? 'play' : 'play pause'
+      },
+      disableCls(){
+          return this.songReady ? '' : 'disable'
       },
       ...mapGetters([
         'fullScreen',
@@ -177,7 +180,7 @@
         this.songReady = true
       },
       error(){
-
+        this.songReady = true
       },
       _getPosAndScale(){
         const targetWidth = 40  //mini播放器左侧图标宽度
