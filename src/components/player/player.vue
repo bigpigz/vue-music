@@ -25,6 +25,17 @@
               </div>
             </div>
           </div>
+          <scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
+            <div class="lyric-wrapper">
+              <div v-if="currentLyric">
+                <p ref="lyricLine"
+                   class="text"
+                   :class="{'current':currentLineNum === index}"
+                   v-for="(line,index) in currentLyric.lines"
+                >{{line.txt}}</p>
+              </div>
+            </div>
+          </scroll>
         </div>
         <div class="bottom">
           <div class="progress-wrapper">
@@ -85,6 +96,7 @@
   import {playMode} from 'common/js/config'
   import {shuffle} from 'common/js/util'
   import Lyric from 'lyric-parser'
+  import Scroll from 'base/scroll/scroll'
   const transform = prefixStyle('transform')
 
   export default {
@@ -93,7 +105,8 @@
         songReady: false,
         currentTime: 0,
         radius: 32,
-        currentLyric: null
+        currentLyric: null,
+        currentLineNum: 0
       }
     },
     computed: {
@@ -252,9 +265,20 @@
       },
       getLyric(){
         this.currentSong.getLyric().then((lyric) => {
-            this.currentLyric = new Lyric(lyric)
-          console.log(this.currentLyric);
+          this.currentLyric = new Lyric(lyric, this.handelLyric)
+          if (this.playing) {
+            this.currentLyric.play()
+          }
         })
+      },
+      handelLyric({lineNum, txt}){
+        this.currentLineNum = lineNum
+        if (lineNum > 5) {
+          let lineEl = this.$refs.lyricLine[lineNum - 5]
+          this.$refs.lyricList.scrollToElement(lineEl, 1000)
+        } else {
+          this.$refs.lyricList.scrollToElement(0, 0, 1000)
+        }
       },
       _pad(num, n = 2){
         let len = num.toString().length
@@ -306,7 +330,8 @@
     },
     components: {
       ProgressBar,
-      ProgressCircle
+      ProgressCircle,
+      Scroll
     }
   }
 </script>
