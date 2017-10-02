@@ -35,7 +35,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {getRecommend, getDiscList} from 'api/recommend'
+  import {getRecommend, getDiscList,getSongList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
   import Slider from 'base/slider/slider'
   import Scroll from 'base/scroll/scroll'
