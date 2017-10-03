@@ -21,6 +21,9 @@
         }
     },
     methods:{
+        setQuery(query){
+          this.query = query
+        },
         clean(){
             this.query = ''
         }
