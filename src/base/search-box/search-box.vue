@@ -30,7 +30,7 @@
     },
     created(){
         this.$watch('query',(newQuery)=>{
-            this.$emit('query,newQuery')
+            this.$emit('query',newQuery)
         })
     }
   }
