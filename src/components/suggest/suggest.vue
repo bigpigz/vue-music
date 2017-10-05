@@ -32,7 +32,7 @@
   import Loading from 'base/loading/loading'
   import Singer from 'common/js/singer'
   import NoResult from 'base/no-result/no-result'
-  import {mapMutations,mapActions} from 'vuex'
+  import {mapMutations, mapActions} from 'vuex'
   const TYPE_SINGER = 'singer'
   const perpage = 20
 
@@ -104,12 +104,13 @@
             path: `/search/${singer.id}`
           })
           this.setSinger(singer)
-        }else{
-            this.insertSong(item)
+        } else {
+          this.insertSong(item)
         }
+        this.$emit('select')
       },
       listScroll(){
-         this.$emit('listScroll')
+        this.$emit('listScroll')
       },
       _checkMore(data){
         const song = data.song
@@ -140,7 +141,7 @@
         setSinger: 'SET_SINGER'
       }),
       ...mapActions([
-          'insertSong'
+        'insertSong'
       ])
     },
     watch: {
