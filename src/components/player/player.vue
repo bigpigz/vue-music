@@ -88,7 +88,7 @@
         <progress-circle class="control" :radius="radius" :percent="percent">
           <i :class="miniIcon" @click.stop="togglePlaying" class="icon-mini"></i>
         </progress-circle>
-        <div class="control" @click="showPlaylist">
+        <div class="control" @click.stop="showPlaylist">
           <i class="icon-playlist"></i>
         </div>
       </div>
