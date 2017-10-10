@@ -50,18 +50,17 @@
   import SearchList from 'base/search-list/search-list'
   import Confirm from 'base/confirm/confirm'
   import Scroll from 'base/scroll/scroll'
-  import {playlistMixin} from 'common/js/mixin'
+  import {playlistMixin, searchMixin} from 'common/js/mixin'
   import {mapActions, mapGetters} from 'vuex'
 
   export default {
-    mixins: [playlistMixin],
+    mixins: [playlistMixin, searchMixin],
     created(){
       this._getHotKey()
     },
     data(){
       return {
-        hotKey: [],
-        query: ''
+        hotKey: []
       }
     },
     computed: {

@@ -8,21 +8,27 @@
         </div>
       </div>
       <div class="search-box-wrapper">
+        <search-box @query="onQueryChange" placeholder="搜索歌曲"></search-box>
       </div>
-      <div class="shortcut">
+      <div class="shortcut" v-show="!query">
       </div>
-      <div class="search-result">
+      <div class="search-result" v-show="query">
+        <suggest @listScroll="blurInput" :showSinger="showSinger" :query="query" @select="selectSuggest"></suggest>
       </div>
     </div>
   </transition>
 </template>
 
 <script type="text/ecmascript-6">
-
+  import SearchBox from 'base/search-box/search-box'
+  import Suggest from 'components/suggest/suggest'
+  import {searchMixin} from 'common/js/mixin'
   export default {
+    mixins: [searchMixin],
     data(){
       return {
-        showFlag: false
+        showFlag: false,
+        showSinger: false
       }
     },
     methods: {
@@ -31,7 +37,14 @@
       },
       hide(){
         this.showFlag = false
+      },
+      selectSuggest(){
+        this.saveSearch()
       }
+    },
+    components: {
+      SearchBox,
+      Suggest
     }
   }
 </script>
